@@ -1,4 +1,4 @@
-from math import rsqrt
+from math import rsqrt, sqrt
 
 
 @register_passable("trivial")
@@ -12,6 +12,10 @@ struct Vec3f(Stringable):
     @always_inline
     fn __init__(x: Float32, y: Float32, z: Float32) -> Self:
         return Self(SIMD[DType.float32, 4](x, y, z, 0))
+
+    @always_inline
+    fn __init__(v: Float32) -> Self:
+        return Self(SIMD[DType.float32, 4](v, v, v, 0))
 
     @always_inline
     fn __init__(data: SIMD[DType.float32, 4]) -> Self:
@@ -61,6 +65,11 @@ struct Vec3f(Stringable):
             s = s + str(self[i])
         s = s + "]"
         return s
+
+
+@always_inline
+fn length(v: Vec3f) -> Float32:
+    return sqrt(dot(v, v))
 
 
 @always_inline

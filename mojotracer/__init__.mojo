@@ -6,4 +6,4 @@ from .image import Image
 from .integrate import Integrator
 from .ray import Ray
 from .sample import Sampler
-from .vec import Vec3f, dot, cross, normalize
+from .vec import Vec3f, dot, cross, length, normalize

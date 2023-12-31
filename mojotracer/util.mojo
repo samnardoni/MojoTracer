@@ -15,3 +15,9 @@ fn clamp(v: Vec3f, min: Float32, max: Float32) -> Vec3f:
         clamp(v[1], min, max),
         clamp(v[2], min, max),
     )
+
+
+# TODO: Where does this belong?
+@always_inline
+fn reflect(d: Vec3f, n: Vec3f) -> Vec3f:
+    return d - n * 2.0 * dot(d, n)
