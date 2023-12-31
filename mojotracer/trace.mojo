@@ -1,3 +1,6 @@
+from algorithm import tile
+
+
 fn trace[
     G: Geometry, S: Sampler, I: Integrator
 ](
@@ -7,10 +10,18 @@ fn trace[
     inout integrator: I,
     width: Int,
     height: Int,
+    samples_per_pixel: Int,
 ):
-    for y in range(height):
-        for x in range(width):
-            trace(geometry, camera, sampler, integrator, width, height, x, y)
+    alias tile_size = 32
+
+    @parameter
+    fn work[size_x: Int, size_y: Int](start_x: Int, start_y: Int):
+        for y in range(start_y, start_y + size_y):
+            for x in range(start_x, start_x + size_x):
+                for s in range(samples_per_pixel):
+                    trace(geometry, camera, sampler, integrator, width, height, x, y)
+
+    tile[work, tile_size, tile_size](0, 0, width, height)
 
 
 fn trace[

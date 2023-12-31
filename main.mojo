@@ -4,7 +4,7 @@ import mojotracer as mt
 fn main():
     alias width = 128
     alias height = 128
-    alias samples = 64
+    alias samples_per_pixel = 128
 
     let camera = mt.Camera()
 
@@ -49,11 +49,10 @@ fn main():
     let sampler = mt.sample.PathSampler()
     var integrator = mt.integrate.ImageIntegrator(width, height)
 
-    for i in range(samples):
-        print("Sample", i)
-        mt.trace.trace(scene, camera, sampler, integrator, width, height)
+    print("Tracing...")
+    mt.trace.trace(scene, camera, sampler, integrator, width, height, samples_per_pixel)
 
-    print("Writing PPM")
+    print("Writing PPM...")
     try:
         mt.image.write_ppm(integrator.image, "./out.ppm")
     except e:
