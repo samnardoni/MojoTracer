@@ -12,6 +12,7 @@ trait Geometry(CollectionElement):
 struct Sphere(Geometry):
     var center: Vec3f
     var radius: Float32
+    var material: Material
 
     # TODO: Rewrite this
     fn intersect(self, ray: Ray) -> HitRecord:
@@ -26,7 +27,7 @@ struct Sphere(Geometry):
             let t = -b / (2 * a)
             let p = ray.at(t)
             let normal = (p - self.center) / self.radius
-            return HitRecord(t, p, normal)
+            return HitRecord(t, p, normal, self.material)
         else:
             let q: Float32
             if b > 0:
@@ -42,7 +43,7 @@ struct Sphere(Geometry):
                 t = t1
             let p = ray.at(t)
             let normal = (p - self.center) / self.radius
-            return HitRecord(t, p, normal)
+            return HitRecord(t, p, normal, self.material)
 
 
 @value
@@ -50,6 +51,7 @@ struct Triangle(Geometry):
     var a: Vec3f
     var b: Vec3f
     var c: Vec3f
+    var material: Material
 
     # TODO: Normal is not correct
     fn intersect(self, ray: Ray) -> HitRecord:
@@ -72,7 +74,7 @@ struct Triangle(Geometry):
         if t < 0:
             return HitRecord()
         let p = ray.at(t)
-        return HitRecord(t, p, normal)
+        return HitRecord(t, p, normal, self.material)
 
 
 @value
@@ -109,6 +111,7 @@ fn _intersect_collection[
     return best
 
 
+# TODO: __lt__?
 fn _closest_intersection(a: HitRecord, b: HitRecord) -> HitRecord:
     if a.hit and b.hit:
         if a.t < b.t:

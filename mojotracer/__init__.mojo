@@ -2,6 +2,7 @@ from .camera import Camera
 from .color import Color
 from .geometry import Geometry, Scene, Sphere, Triangle
 from .hitrecord import HitRecord
+from .material import Material
 from .image import Image
 from .integrate import Integrator
 from .ray import Ray
