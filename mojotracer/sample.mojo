@@ -34,12 +34,6 @@ fn d_ggx(NoH: Float32, roughness: Float32) -> Float32:
     return k * k * (1.0 / pi)
 
 
-# TODO: Better place for this?
-fn rand_direction() -> Vec3f:
-    let randoms = random.rand[DType.float32](3) * 2.0 - 1.0
-    return normalize(Vec3f(randoms[0], randoms[1], randoms[2]))
-
-
 @value
 struct PathSampler(Sampler):
     alias max_depth = 4
@@ -57,10 +51,7 @@ struct PathSampler(Sampler):
                 let albedo = hit.material.albedo
 
                 let new_position = hit.p + hit.normal * self.elipson
-                var new_direction = rand_direction()
-
-                if dot(new_direction, hit.normal) < 0:
-                    new_direction = -new_direction
+                let new_direction = util.rand_hemisphere(hit.normal)
 
                 # let h = normalize(ray.direction + new_direction)
                 # let NoH = dot(hit.normal, h)
@@ -73,8 +64,5 @@ struct PathSampler(Sampler):
                 ray = Ray(new_position, new_direction)
             else:
                 break
-
-        # TODO: Best place to clamp?
-        color = util.clamp(color, 0, 1)
 
         return color

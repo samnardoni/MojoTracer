@@ -21,3 +21,17 @@ fn clamp(v: Vec3f, min: Float32, max: Float32) -> Vec3f:
 @always_inline
 fn reflect(d: Vec3f, n: Vec3f) -> Vec3f:
     return d - n * 2.0 * dot(d, n)
+
+
+@always_inline
+fn rand_direction() -> Vec3f:
+    let randoms = random.rand[DType.float32](3) * 2.0 - 1.0
+    return normalize(Vec3f(randoms[0], randoms[1], randoms[2]))
+
+
+@always_inline
+fn rand_hemisphere(normal: Vec3f) -> Vec3f:
+    var direction = rand_direction()
+    if dot(direction, normal) < 0:
+        direction = -direction
+    return direction
