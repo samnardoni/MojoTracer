@@ -2,11 +2,11 @@ from algorithm import tile
 
 
 fn render[
-    G: Geometry, S: Sampler
+    G: Geometry, I: Integrator
 ](
     geometry: G,
     camera: Camera,
-    sampler: S,
+    integrator: I,
     inout imagebuffer: ImageBuffer,
     samples_per_pixel: Int,
 ):
@@ -17,7 +17,7 @@ fn render[
         for y in range(start_y, start_y + size_y):
             for x in range(start_x, start_x + size_x):
                 for s in range(samples_per_pixel):
-                    kernel(geometry, camera, sampler, imagebuffer, x, y)
+                    kernel(geometry, camera, integrator, imagebuffer, x, y)
 
     tile[work, tile_size, tile_size](
         0, 0, imagebuffer.image.width, imagebuffer.image.height
@@ -25,11 +25,11 @@ fn render[
 
 
 fn kernel[
-    G: Geometry, S: Sampler
+    G: Geometry, I: Integrator
 ](
     geometry: G,
     camera: Camera,
-    sampler: S,
+    integrator: I,
     inout imagebuffer: ImageBuffer,
     x: Int,
     y: Int,
@@ -39,5 +39,5 @@ fn kernel[
     let u = (x / Float32(imagebuffer.image.width)) * 2 - 1
     let v = 0 - ((y / Float32(imagebuffer.image.height)) * 2 - 1)
     let ray = camera.get_ray(u, v)
-    let color = sampler.sample(geometry, ray)
+    let color = integrator.sample(geometry, ray)
     imagebuffer.integrate(x, y, color)

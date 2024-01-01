@@ -1,13 +1,14 @@
 import random
 
 
-trait Sampler:
+trait Integrator:
+    # TODO: Is this a good name?
     fn sample[G: Geometry](self, geometry: G, ray: Ray) -> Color:
         ...
 
 
 @value
-struct NormalSampler(Sampler):
+struct NormalIntegrator(Integrator):
     fn sample[G: Geometry](self, geometry: G, ray: Ray) -> Color:
         let hit = geometry.intersect(ray)
         if hit.hit:
@@ -17,7 +18,7 @@ struct NormalSampler(Sampler):
 
 
 @value
-struct DepthSampler(Sampler):
+struct DepthIntegrator(Integrator):
     fn sample[G: Geometry](self, geometry: G, ray: Ray) -> Color:
         let hit = geometry.intersect(ray)
         if hit.hit:
@@ -35,7 +36,7 @@ fn d_ggx(NoH: Float32, roughness: Float32) -> Float32:
 
 
 @value
-struct PathSampler(Sampler):
+struct PathIntegrator(Integrator):
     alias max_depth = 4
     alias elipson = 0.001
 

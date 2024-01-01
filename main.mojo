@@ -46,11 +46,11 @@ fn main():
     #     mt.Triangle(mt.Vec3f(-2, 0, 1.5), mt.Vec3f(1, 0, 1.5), mt.Vec3f(-2, 2, 1.5))
     # )
 
-    let sampler = mt.sample.PathSampler()
+    let integrator = mt.integrate.PathIntegrator()
     var imagebuffer = mt.ImageBuffer(width, height)
 
     print("Tracing...")
-    mt.render.render(scene, camera, sampler, imagebuffer, samples_per_pixel)
+    mt.render.render(scene, camera, integrator, imagebuffer, samples_per_pixel)
 
     print("Writing PPM...")
     try:
