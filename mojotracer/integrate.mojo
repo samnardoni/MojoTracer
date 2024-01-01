@@ -48,6 +48,7 @@ struct PathIntegrator(Integrator):
             let hit = geometry.intersect(ray)
             if hit.hit:
                 let n = hit.normal
+                # TODO: World vs local?
                 let w_o = -ray.direction
                 # TODO: tuple destructuring?
                 let sample = material.sample(hit.normal, w_o, hit.material)

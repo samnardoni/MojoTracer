@@ -4,7 +4,7 @@ import mojotracer as mt
 fn main():
     alias width = 128
     alias height = 128
-    alias samples_per_pixel = 128
+    alias samples_per_pixel = 512
 
     let camera = mt.Camera()
 
@@ -13,21 +13,33 @@ fn main():
         mt.Sphere(
             center=mt.Vec3f(-1.5, 0.75, 3),
             radius=0.9,
-            material=mt.Material(emissive=mt.Vec3f(0.5, 0.0, 0.0), albedo=mt.Vec3f(1.0, 1.0, 1.0), roughness=0.5),
+            material=mt.Material(
+                emissive=mt.Vec3f(0.5, 0.0, 0.0),
+                albedo=mt.Vec3f(1.0, 1.0, 1.0),
+                roughness=0.5,
+            ),
         )
     )
     scene.add(
         mt.Sphere(
             center=mt.Vec3f(0, 0, 2),
             radius=0.5,
-            material=mt.Material(emissive=mt.Vec3f(0.5, 1.0, 0.5), albedo=mt.Vec3f(0.5, 0.5, 0.5), roughness=0),
+            material=mt.Material(
+                emissive=mt.Vec3f(0.5, 1.0, 0.5),
+                albedo=mt.Vec3f(0.5, 0.5, 0.5),
+                roughness=0,
+            ),
         )
     )
     scene.add(
         mt.Sphere(
             center=mt.Vec3f(0.75, 0.75, 2),
             radius=0.5,
-            material=mt.Material(emissive=mt.Vec3f(0.0, 0.0, 0.0), albedo=mt.Vec3f(1.0, 1.0, 1.0), roughness=0),
+            material=mt.Material(
+                emissive=mt.Vec3f(0.0, 0.0, 0.0),
+                albedo=mt.Vec3f(1.0, 1.0, 1.0),
+                roughness=0,
+            ),
         )
     )
 
@@ -36,7 +48,11 @@ fn main():
         mt.Sphere(
             center=mt.Vec3f(0.0, 100.0, 0.0),
             radius=50.0,
-            material=mt.Material(emissive=mt.Vec3f(5.0, 5.0, 5.0), albedo=mt.Vec3f(1.0, 1.0, 1.0), roughness=0),
+            material=mt.Material(
+                emissive=mt.Vec3f(5.0, 5.0, 5.0),
+                albedo=mt.Vec3f(1.0, 1.0, 1.0),
+                roughness=0,
+            ),
         )
     )
 
