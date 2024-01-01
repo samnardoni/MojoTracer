@@ -50,7 +50,7 @@ struct PathIntegrator(Integrator):
                 let n = hit.normal
                 let w_o = -ray.direction
                 # TODO: tuple destructuring?
-                let sample = material.sample(w_o, hit.normal, hit.material)
+                let sample = material.sample(hit.normal, w_o, hit.material)
                 let w_i = sample.get[0, Vec3f]()
                 let p = sample.get[1, Float32]()
                 let f_r = material.brdf(w_i, w_o, hit.material)
