@@ -1,9 +1,4 @@
-trait Integrator:
-    fn integrate(inout self, x: Int, y: Int, color: Color):
-        ...
-
-
-struct ImageIntegrator(Integrator):
+struct ImageBuffer:
     var image: Image
     var samples: Int
 
@@ -11,6 +6,8 @@ struct ImageIntegrator(Integrator):
         self.image = Image(width, height)
         self.samples = 0
 
+    # TODO: Better name?
+    # TODO: Dividing by num samples should be once at the end
     fn integrate(inout self, x: Int, y: Int, incoming_color: Color):
         # TODO: Hack to increment samples correctly
         if x == 0 and y == 0:

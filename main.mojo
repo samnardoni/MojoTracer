@@ -47,13 +47,13 @@ fn main():
     # )
 
     let sampler = mt.sample.PathSampler()
-    var integrator = mt.integrate.ImageIntegrator(width, height)
+    var imagebuffer = mt.ImageBuffer(width, height)
 
     print("Tracing...")
-    mt.trace.trace(scene, camera, sampler, integrator, width, height, samples_per_pixel)
+    mt.trace.trace(scene, camera, sampler, imagebuffer, samples_per_pixel)
 
     print("Writing PPM...")
     try:
-        mt.image.write_ppm(integrator.image, "./out.ppm")
+        mt.image.write_ppm(imagebuffer.image, "./out.ppm")
     except e:
         print("Error writing PPM", e)
