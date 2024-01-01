@@ -1,7 +1,7 @@
 from algorithm import tile
 
 
-fn trace[
+fn render[
     G: Geometry, S: Sampler
 ](
     geometry: G,
@@ -17,14 +17,14 @@ fn trace[
         for y in range(start_y, start_y + size_y):
             for x in range(start_x, start_x + size_x):
                 for s in range(samples_per_pixel):
-                    trace_kernel(geometry, camera, sampler, imagebuffer, x, y)
+                    kernel(geometry, camera, sampler, imagebuffer, x, y)
 
     tile[work, tile_size, tile_size](
         0, 0, imagebuffer.image.width, imagebuffer.image.height
     )
 
 
-fn trace_kernel[
+fn kernel[
     G: Geometry, S: Sampler
 ](
     geometry: G,

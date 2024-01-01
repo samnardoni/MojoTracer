@@ -50,7 +50,7 @@ fn main():
     var imagebuffer = mt.ImageBuffer(width, height)
 
     print("Tracing...")
-    mt.trace.trace(scene, camera, sampler, imagebuffer, samples_per_pixel)
+    mt.render.render(scene, camera, sampler, imagebuffer, samples_per_pixel)
 
     print("Writing PPM...")
     try:
