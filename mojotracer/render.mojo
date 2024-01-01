@@ -1,4 +1,5 @@
 from algorithm import tile
+from random import rand
 
 
 fn render[
@@ -36,8 +37,11 @@ fn kernel[
 ):
     # TODO: u and v should be calculated in Camera?
     # TODO: y positive or negative?
-    let u = (x / Float32(imagebuffer.image.width)) * 2 - 1
-    let v = 0 - ((y / Float32(imagebuffer.image.height)) * 2 - 1)
+    # TODO: Is here the best place to apply jitter?
+    let jittered_x = x + rand[DType.float32]()[0] - 0.5
+    let jittered_y = y + rand[DType.float32]()[0] - 0.5
+    let u = (jittered_x / Float32(imagebuffer.image.width)) * 2 - 1
+    let v = 0 - ((jittered_y / Float32(imagebuffer.image.height)) * 2 - 1)
     let ray = camera.get_ray(u, v)
     let color = integrator.sample(geometry, ray)
     imagebuffer.integrate(x, y, color)
