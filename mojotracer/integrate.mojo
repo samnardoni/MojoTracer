@@ -1,6 +1,3 @@
-import random
-
-
 trait Integrator:
     # TODO: Is this a good name?
     fn sample[G: Geometry](self, geometry: G, ray: Ray) -> Color:
@@ -28,12 +25,6 @@ struct DepthIntegrator(Integrator):
             return Vec3f(0, 0, 0)
 
 
-fn d_ggx(NoH: Float32, roughness: Float32) -> Float32:
-    let a = NoH * roughness
-    let k = roughness / (1.0 - NoH * NoH + a * a)
-    return k * k * (1.0 / util.pi)
-
-
 @value
 struct PathIntegrator(Integrator):
     alias max_depth = 4
@@ -54,12 +45,12 @@ struct PathIntegrator(Integrator):
                 let sample = material.sample(hit.normal, w_o, hit.material)
                 let w_i = sample.get[0, Vec3f]()
                 let p = sample.get[1, Float32]()
-                let f_r = material.brdf(w_i, w_o, hit.material)
-                let cos_theta = dot(n, w_i)
-
-                # let h = normalize(ray.direction + new_direction)
-                # let NoH = dot(hit.normal, h)
-                # let d = d_ggx(NoH, hit.material.roughness)
+                let f_r = material.brdf(n, w_i, w_o, hit.material)
+                # TODO: Does this belong in the BRDF?
+                # TODO: How does this work with BTDF?
+                let cos_theta = util.clamp(
+                    dot(n, w_i), 0, 1
+                )  # TODO: Does this need to be clamped?
 
                 color = color + throughput * hit.material.emissive  # TODO: +=
                 throughput = throughput * f_r * cos_theta * (1 / p)  # TODO: *=
