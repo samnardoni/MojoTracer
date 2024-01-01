@@ -1,4 +1,4 @@
-from math import abs, sqrt
+from math import abs, cos, sin, sqrt
 from tensor import Index
 
 # TODO: stdlib?
@@ -30,6 +30,7 @@ fn reflect(d: Vec3f, n: Vec3f) -> Vec3f:
     return d - n * 2.0 * dot(d, n)
 
 
+# TODO: This needs tidying up
 @always_inline
 fn tangent_and_bitangent(normal: Vec3f) -> (Vec3f, Vec3f):
     let arbitrary: Vec3f
@@ -44,6 +45,7 @@ fn tangent_and_bitangent(normal: Vec3f) -> (Vec3f, Vec3f):
     return (tangent, bitangent)
 
 
+# TODO: This needs tidying up
 @always_inline
 fn tangent_to_world(normal: Vec3f) -> Tensor[DType.float32]:
     let t_bt = tangent_and_bitangent(normal)
@@ -62,6 +64,7 @@ fn tangent_to_world(normal: Vec3f) -> Tensor[DType.float32]:
     return tensor
 
 
+# TODO: This needs tidying up
 @always_inline
 fn tangent_to_world(v: Vec3f, normal: Vec3f) -> Vec3f:
     let matrix = tangent_to_world(normal)
@@ -76,3 +79,9 @@ fn tangent_to_world(v: Vec3f, normal: Vec3f) -> Vec3f:
         + matrix[Index(2, 1)] * v[1]
         + matrix[Index(2, 2)] * v[2],
     )
+
+
+# TODO: Better place for this?
+@always_inline
+fn spherical_to_cartesian(theta: Float32, phi: Float32) -> Vec3f:
+    return Vec3f(x=sin(theta) * cos(phi), y=sin(theta) * sin(phi), z=cos(theta))
