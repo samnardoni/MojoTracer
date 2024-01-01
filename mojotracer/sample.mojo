@@ -15,8 +15,7 @@ struct UniformSphere(Sample):
         let e = random.rand[DType.float32](2)
         let theta = acos(-1 + 2 * e[0])
         let phi = 2 * util.pi * e[1]
-        let v = util.spherical_to_cartesian(theta, phi)
-        return util.tangent_to_world(v, normal)
+        return util.spherical_to_cartesian(theta, phi)
 
     fn pdf(self, normal: Vec3f, w_o: Vec3f, w_i: Vec3f) -> Float32:
         return 1 / (4 * util.pi)
@@ -46,16 +45,3 @@ struct CosineWeightedHemisphere(Sample):
 
     fn pdf(self, normal: Vec3f, w_o: Vec3f, w_i: Vec3f) -> Float32:
         return abs(dot(normal, w_i)) / util.pi
-
-
-# @value
-# struct UniformHemisphere(Sample):
-#     fn sample(self, normal: Vec3f, w_o: Vec3f) -> Vec3f:
-#         let sphere = UniformSphere()
-#         let direction = sphere.sample(normal, w_o)
-#         if dot(direction, normal) < 0:
-#             return -direction
-#         return direction
-
-#     fn pdf(self, normal: Vec3f, w_o: Vec3f, w_i: Vec3f) -> Float32:
-#         return 1 / (2 * util.pi)
