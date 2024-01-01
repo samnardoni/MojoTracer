@@ -1,3 +1,7 @@
+# TODO: stdlib?
+alias pi: Float32 = 3.14159265358979323846
+
+
 @always_inline
 fn clamp(v: Float32, min: Float32, max: Float32) -> Float32:
     if v < min:

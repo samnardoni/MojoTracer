@@ -29,10 +29,9 @@ struct DepthIntegrator(Integrator):
 
 
 fn d_ggx(NoH: Float32, roughness: Float32) -> Float32:
-    alias pi = 3.1415  # TODO: stdlib?
     let a = NoH * roughness
     let k = roughness / (1.0 - NoH * NoH + a * a)
-    return k * k * (1.0 / pi)
+    return k * k * (1.0 / util.pi)
 
 
 @value
@@ -48,21 +47,22 @@ struct PathIntegrator(Integrator):
         for _ in range(self.max_depth):
             let hit = geometry.intersect(ray)
             if hit.hit:
-                let emission = hit.material.emissive
-                let albedo = hit.material.albedo
-
-                let new_position = hit.p + hit.normal * self.elipson
-                let new_direction = util.rand_hemisphere(hit.normal)
+                let n = hit.normal
+                let w_o = -ray.direction
+                # TODO: tuple destructuring?
+                let sample = material.sample(w_o, hit.normal, hit.material)
+                let w_i = sample.get[0, Vec3f]()
+                let p = sample.get[1, Float32]()
+                let f_r = material.brdf(w_i, w_o, hit.material)
+                let cos_theta = dot(n, w_i)
 
                 # let h = normalize(ray.direction + new_direction)
                 # let NoH = dot(hit.normal, h)
                 # let d = d_ggx(NoH, hit.material.roughness)
 
-                let cos_theta = dot(hit.normal, new_direction)
-
-                color = color + throughput * emission  # TODO: +=
-                throughput = throughput * albedo * cos_theta  # TODO: *=
-                ray = Ray(new_position, new_direction)
+                color = color + throughput * hit.material.emissive  # TODO: +=
+                throughput = throughput * f_r * cos_theta * (1 / p)  # TODO: *=
+                ray = Ray(origin=hit.p + hit.normal * self.elipson, direction=w_i)
             else:
                 break
 

@@ -11,32 +11,32 @@ fn main():
     var scene = mt.Scene()
     scene.add(
         mt.Sphere(
-            mt.Vec3f(-1.5, 0.75, 3),
-            0.9,
-            mt.Material(mt.Vec3f(0.5, 0.0, 0.0), mt.Vec3f(1.0, 1.0, 1.0), 0.5),
+            center=mt.Vec3f(-1.5, 0.75, 3),
+            radius=0.9,
+            material=mt.Material(emissive=mt.Vec3f(0.5, 0.0, 0.0), albedo=mt.Vec3f(1.0, 1.0, 1.0), roughness=0.5),
         )
     )
     scene.add(
         mt.Sphere(
-            mt.Vec3f(0, 0, 2),
-            0.5,
-            mt.Material(mt.Vec3f(0.5, 1.0, 0.5), mt.Vec3f(0.5, 0.5, 0.5), 0),
+            center=mt.Vec3f(0, 0, 2),
+            radius=0.5,
+            material=mt.Material(emissive=mt.Vec3f(0.5, 1.0, 0.5), albedo=mt.Vec3f(0.5, 0.5, 0.5), roughness=0),
         )
     )
     scene.add(
         mt.Sphere(
-            mt.Vec3f(0.75, 0.75, 2),
-            0.5,
-            mt.Material(mt.Vec3f(0.0, 0.0, 0.0), mt.Vec3f(1.0, 1.0, 1.0), 0),
+            center=mt.Vec3f(0.75, 0.75, 2),
+            radius=0.5,
+            material=mt.Material(emissive=mt.Vec3f(0.0, 0.0, 0.0), albedo=mt.Vec3f(1.0, 1.0, 1.0), roughness=0),
         )
     )
 
     # Light
     scene.add(
         mt.Sphere(
-            mt.Vec3f(0.0, 100.0, 0.0),
-            50.0,
-            mt.Material(mt.Vec3f(10.0, 10.0, 10.0), mt.Vec3f(1.0, 1.0, 1.0), 0),
+            center=mt.Vec3f(0.0, 100.0, 0.0),
+            radius=50.0,
+            material=mt.Material(emissive=mt.Vec3f(5.0, 5.0, 5.0), albedo=mt.Vec3f(1.0, 1.0, 1.0), roughness=0),
         )
     )
 
