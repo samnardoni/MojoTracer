@@ -29,8 +29,9 @@ struct DepthIntegrator(Integrator):
 struct PathIntegrator(Integrator):
     alias max_depth = 4
     alias elipson = 0.001
+    alias brdf = brdf.MicrofacetBRDF()
 
-    fn sample[G: Geometry](self, geometry: G, original_ray: Ray) -> Color:
+    fn sample[G: Geometry](self, geometry: G, original_ray: Ray) -> Color:       
         var ray = original_ray
         var color = Vec3f(0, 0, 0)
         var throughput = Vec3f(1, 1, 1)
@@ -42,10 +43,10 @@ struct PathIntegrator(Integrator):
                 # TODO: World vs local?
                 let w_o = -ray.direction
                 # TODO: tuple destructuring?
-                let sample = material.sample(hit.normal, w_o, hit.material)
+                let sample = self.brdf.sample(hit.normal, w_o, hit.material)
                 let w_i = sample.get[0, Vec3f]()
                 let p = sample.get[1, Float32]()
-                let f_r = material.brdf(n, w_i, w_o, hit.material)
+                let f_r = self.brdf.brdf(n, w_i, w_o, hit.material)
                 # TODO: Does this belong in the BRDF?
                 # TODO: How does this work with BTDF?
                 let cos_theta = util.clamp(
