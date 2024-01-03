@@ -18,9 +18,14 @@ struct LambertBRDF(BRDF):
 
 @value
 struct MicrofacetBRDF(BRDF):
+    # TODO: Remove hardcoded min/max roughness
+    alias min_roughness = 0.01
+    alias max_roughness = 1.0
+
     fn brdf(self, normal: Vec3f, w_i: Vec3f, w_o: Vec3f, material: Material) -> Vec3f:
+        let roughness = util.clamp(material.roughness, self.min_roughness, self.max_roughness)
         let half = normalize(w_i + w_o)
-        let d = d_ggx(normal, half, material.roughness)
+        let d = d_ggx(normal, half, roughness)
         # TODO: Why doesn't this work?
         # TODO: Remove hardcoded refractive index
         # let f = f_schlick(normal, w_o, 1.5)
@@ -31,18 +36,15 @@ struct MicrofacetBRDF(BRDF):
         )
 
     fn sample(self, normal: Vec3f, w_o: Vec3f, material: Material) -> (Vec3f, Float32):
-        # TODO: GGX sampling?
-        # let sample = mojotracer.sample.CosineWeightedHemisphere()  # TODO: Remove package name
-        let sample = mojotracer.sample.GGX(alpha=material.roughness)  # TODO: Remove package name
+        let roughness = util.clamp(material.roughness, self.min_roughness, self.max_roughness)
+        let sample = mojotracer.sample.GGX(alpha=roughness)  # TODO: Remove package name
         return sample.sample(normal, w_o)
 
 
 # TODO: These functions are 'details' of MicrofacetBRDF...
 
 
-fn d_ggx(normal: Vec3f, half: Vec3f, owned roughness: Float32) -> Float32:
-    # TODO: Why does roughness = 0.0 cause issues?
-    roughness = util.clamp(roughness, 0.05, 1)
+fn d_ggx(normal: Vec3f, half: Vec3f, roughness: Float32) -> Float32:
     let ndoth = dot(normal, half)
     let a = ndoth * roughness
     let k = roughness / (1.0 - ndoth * ndoth + a * a)
