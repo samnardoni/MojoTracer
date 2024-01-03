@@ -12,9 +12,6 @@ struct LambertBRDF(BRDF):
         return material.albedo * (1 / util.pi)
 
     fn sample(self, normal: Vec3f, w_o: Vec3f, material: Material) -> (Vec3f, Float32):
-        # TODO: Remove commented-out code
-        # let sample = mojotracer.sample.UniformSphere()
-        # let sample = mojotracer.sample.UniformHemisphere()
         let sample = mojotracer.sample.CosineWeightedHemisphere()  # TODO: Remove package name
         let w_i = sample.sample(normal, w_o)
         let p = sample.pdf(normal, w_o, w_i)
@@ -43,7 +40,7 @@ struct MicrofacetBRDF(BRDF):
         return (w_i, p)
 
 
-# TODO: Detail...
+# TODO: These functions are 'details' of MicrofacetBRDF...
 
 
 fn d_ggx(normal: Vec3f, half: Vec3f, owned roughness: Float32) -> Float32:
