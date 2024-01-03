@@ -11,13 +11,15 @@ struct Image:
         self.height = height
         self.data = Tensor[DType.float32](width, height, 3)
 
+    @always_inline
     fn get(self, x: Int, y: Int) -> Vec3f:
         return Vec3f(
-            self.data[Index(x, y, 0)],
-            self.data[Index(x, y, 1)],
-            self.data[Index(x, y, 2)],
+            self.data[x, y, 0],
+            self.data[x, y, 1],
+            self.data[x, y, 2],
         )
 
+    @always_inline
     fn set(inout self, x: Int, y: Int, color: Vec3f):
         self.data[Index(x, y, 0)] = color[0]
         self.data[Index(x, y, 1)] = color[1]
