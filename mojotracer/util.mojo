@@ -53,14 +53,14 @@ fn tangent_to_world(normal: Vec3f) -> Tensor[DType.float32]:
     let bitangent = t_bt.get[1, Vec3f]()
     var tensor = Tensor[DType.float32](3, 3)
     tensor[Index(0, 0)] = tangent[0]
-    tensor[Index(0, 1)] = bitangent[0]
-    tensor[Index(0, 2)] = normal[0]
+    tensor[Index(0, 1)] = normal[0]
+    tensor[Index(0, 2)] = bitangent[0]
     tensor[Index(1, 0)] = tangent[1]
-    tensor[Index(1, 1)] = bitangent[1]
-    tensor[Index(1, 2)] = normal[1]
+    tensor[Index(1, 1)] = normal[1]
+    tensor[Index(1, 2)] = bitangent[1]
     tensor[Index(2, 0)] = tangent[2]
-    tensor[Index(2, 1)] = bitangent[2]
-    tensor[Index(2, 2)] = normal[2]
+    tensor[Index(2, 1)] = normal[2]
+    tensor[Index(2, 2)] = bitangent[2]
     return tensor
 
 
@@ -84,7 +84,7 @@ fn tangent_to_world(v: Vec3f, normal: Vec3f) -> Vec3f:
 # TODO: Better place for this?
 @always_inline
 fn spherical_to_cartesian(theta: Float32, phi: Float32) -> Vec3f:
-    return Vec3f(x=sin(theta) * cos(phi), y=sin(theta) * sin(phi), z=cos(theta))
+    return Vec3f(x=sin(theta) * cos(phi), y=cos(theta), z=sin(theta) * sin(phi))
 
 
 # TODO: Is there a better name for this?
