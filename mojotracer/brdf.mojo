@@ -34,7 +34,8 @@ struct MicrofacetBRDF(BRDF):
 
     fn sample(self, normal: Vec3f, w_o: Vec3f, material: Material) -> (Vec3f, Float32):
         # TODO: GGX sampling?
-        let sample = mojotracer.sample.CosineWeightedHemisphere()  # TODO: Remove package name
+        # let sample = mojotracer.sample.CosineWeightedHemisphere()  # TODO: Remove package name
+        let sample = mojotracer.sample.GGX(alpha=material.roughness)  # TODO: Remove package name
         let w_i = sample.sample(normal, w_o)
         let p = sample.pdf(normal, w_o, w_i)
         return (w_i, p)

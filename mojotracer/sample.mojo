@@ -45,3 +45,21 @@ struct CosineWeightedHemisphere(Sample):
 
     fn pdf(self, normal: Vec3f, w_o: Vec3f, w_i: Vec3f) -> Float32:
         return abs(dot(normal, w_i)) / util.pi
+
+
+@value
+struct GGX(Sample):
+    var alpha: Float32
+
+    fn sample(self, normal: Vec3f, w_o: Vec3f) -> Vec3f:
+        let e = random.rand[DType.float32](2)
+        let theta = acos(sqrt((1 - e[0]) / ((self.alpha**2 - 1) * e[0] + 1)))
+        let phi = 2 * util.pi * e[1]
+        let v = util.tangent_to_world(util.spherical_to_cartesian(theta, phi), normal)
+        return util.reflect(-w_o, v)
+
+    # TODO: Is this correct?
+    fn pdf(self, normal: Vec3f, w_o: Vec3f, w_i: Vec3f) -> Float32:
+        let num = (self.alpha**2 * abs(dot(normal, w_i) * dot(normal, w_o)))
+        let denom = util.pi * (self.alpha**2 - 1) * (dot(normal, w_o) ** 2 + 1) ** 2
+        return num / denom
