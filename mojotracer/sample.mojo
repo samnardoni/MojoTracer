@@ -58,8 +58,9 @@ struct GGX(Sample):
         let v = util.tangent_to_world(util.spherical_to_cartesian(theta, phi), normal)
         return util.reflect(-w_o, v)
 
-    # TODO: Is this correct?
     fn pdf(self, normal: Vec3f, w_o: Vec3f, w_i: Vec3f) -> Float32:
-        let num = (self.alpha**2 * abs(dot(normal, w_i) * dot(normal, w_o)))
-        let denom = util.pi * (self.alpha**2 - 1) * (dot(normal, w_o) ** 2 + 1) ** 2
+        let cos_theta = dot(normal, w_i)
+        let sin_theta = sqrt(1 - cos_theta**2)
+        let num = self.alpha**2 * cos_theta * sin_theta
+        let denom = util.pi * ((self.alpha**2 - 1) * (cos_theta ** 2) + 1) ** 2
         return num / denom
