@@ -19,7 +19,7 @@ struct LambertBRDF(BRDF):
 @value
 struct MicrofacetBRDF(BRDF):
     # TODO: Remove hardcoded min/max roughness
-    alias min_roughness = 0.01
+    alias min_roughness = 0.1
     alias max_roughness = 1.0
 
     fn brdf(self, normal: Vec3f, w_i: Vec3f, w_o: Vec3f, material: Material) -> Vec3f:
