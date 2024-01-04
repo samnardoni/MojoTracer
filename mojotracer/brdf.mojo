@@ -47,7 +47,7 @@ struct MicrofacetBRDF(BRDF):
 fn d_ggx(normal: Vec3f, half: Vec3f, roughness: Float32) -> Float32:
     let ndoth = dot(normal, half)
     let a = ndoth * roughness
-    let k = roughness / (1.0 - ndoth * ndoth + a * a)
+    let k = roughness / (1.0 - ndoth**2 + a**2)
     return k * k * (1.0 / util.pi)
 
 
