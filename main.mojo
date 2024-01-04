@@ -4,7 +4,7 @@ import mojotracer as mt
 fn main():
     alias width = 128
     alias height = 128
-    alias samples_per_pixel = 512
+    alias samples_per_pixel = 128
     # alias width = 256
     # alias height = 256
     # alias samples_per_pixel = 1024 * 4
@@ -12,39 +12,6 @@ fn main():
     let camera = mt.Camera()
 
     var scene = mt.Scene()
-    # scene.add(
-    #     mt.Sphere(
-    #         center=mt.Vec3f(-1.5, 0.75, 3),
-    #         radius=0.9,
-    #         material=mt.Material(
-    #             emissive=mt.Vec3f(0.5, 0.0, 0.0),
-    #             albedo=mt.Vec3f(1.0, 1.0, 1.0),
-    #             roughness=0.2,
-    #         ),
-    #     )
-    # )
-    # scene.add(
-    #     mt.Sphere(
-    #         center=mt.Vec3f(0, 0, 2),
-    #         radius=0.5,
-    #         material=mt.Material(
-    #             emissive=mt.Vec3f(0.5, 1.0, 0.5),
-    #             albedo=mt.Vec3f(0.5, 0.5, 0.5),
-    #             roughness=1,
-    #         ),
-    #     )
-    # )
-    # scene.add(
-    #     mt.Sphere(
-    #         center=mt.Vec3f(0.75, 0.75, 2),
-    #         radius=0.5,
-    #         material=mt.Material(
-    #             emissive=mt.Vec3f(0.0, 0.0, 0.0),
-    #             albedo=mt.Vec3f(1.0, 1.0, 1.0),
-    #             roughness=0.1,
-    #         ),
-    #     )
-    # )
 
     for i in range(0, 5):
         for j in range(0, 5):
@@ -53,7 +20,7 @@ fn main():
                     center=mt.Vec3f(i * 2.0 - 5.0, j * 2.0 - 5.0, 10.0),
                     radius=1.0,
                     material=mt.Material(
-                        emissive=mt.Vec3f(0.0, i/5.0, 0.0),
+                        emissive=mt.Vec3f(0.0, i/5.0, j/5.0),
                         albedo=mt.Vec3f(1.0, 1.0, 1.0),
                         roughness=j/5.0,
                     ),
@@ -63,21 +30,93 @@ fn main():
     # Light
     scene.add(
         mt.Sphere(
-            center=mt.Vec3f(0.0, 100.0, 0.0),
-            radius=50.0,
+            center=mt.Vec3f(0.0, 10.0+6.0-0.5, 10.0),
+            radius=10,
             material=mt.Material(
-                emissive=mt.Vec3f(5.0, 5.0, 5.0),
+                emissive=mt.Vec3f(20.0, 20.0, 20.0),
                 albedo=mt.Vec3f(1.0, 1.0, 1.0),
                 roughness=0,
             ),
         )
     )
 
-    # scene.add(mt.Sphere(mt.Vec3f(0.0, 0.0, 0.0), 10.0, mt.Material(mt.Vec3f(0.5, 0.5, 0.5), mt.Vec3f(0.0, 0.0, 0.0), 0)))
+    # Ceiling
+    scene.add(
+        mt.Plane(
+            origin=mt.Vec3f(0.0, 6.0, 0.0),
+            normal=mt.Vec3f(0.0, -1.0, 0.0),
+            material=mt.Material(
+                emissive=mt.Vec3f(0.0, 0.0, 0.0),
+                albedo=mt.Vec3f(1.0, 1.0, 1.0),
+                roughness=1.0,
+            )
+        )
+    )
 
-    # scene.add(
-    #     mt.Triangle(mt.Vec3f(-2, 0, 1.5), mt.Vec3f(1, 0, 1.5), mt.Vec3f(-2, 2, 1.5))
-    # )
+    # Floor
+    scene.add(
+        mt.Plane(
+            origin=mt.Vec3f(0.0, -6.0, 0.0),
+            normal=mt.Vec3f(0.0, 1.0, 0.0),
+            material=mt.Material(
+                emissive=mt.Vec3f(0.0, 0.0, 0.0),
+                albedo=mt.Vec3f(1.0, 1.0, 1.0),
+                roughness=0.25,
+            )
+        )
+    )
+
+    # Back wall
+    scene.add(
+        mt.Plane(
+            origin=mt.Vec3f(0.0, 0.0, 20.0),
+            normal=mt.Vec3f(0.0, 0.0, -1.0),
+            material=mt.Material(
+                emissive=mt.Vec3f(0.0, 0.0, 0.0),
+                albedo=mt.Vec3f(1.0, 1.0, 1.0),
+                roughness=1.0,
+            )
+        )
+    )
+
+    # Left wall
+    scene.add(
+        mt.Plane(
+            origin=mt.Vec3f(-10.0, 0.0, 0.0),
+            normal=mt.Vec3f(1.0, 0.0, 0.0),
+            material=mt.Material(
+                emissive=mt.Vec3f(0.0, 0.0, 0.0),
+                albedo=mt.Vec3f(1.0, 0.0, 0.0),
+                roughness=1.0,
+            )
+        )
+    )
+
+    # Right wall
+    scene.add(
+        mt.Plane(
+            origin=mt.Vec3f(10.0, 0.0, 0.0),
+            normal=mt.Vec3f(-1.0, 0.0, 0.0),
+            material=mt.Material(
+                emissive=mt.Vec3f(0.0, 0.0, 0.0),
+                albedo=mt.Vec3f(0.0, 1.0, 0.0),
+                roughness=1.0,
+            )
+        )
+    )
+
+    # Front wall
+    scene.add(
+        mt.Plane(
+            origin=mt.Vec3f(0.0, 0.0, -10.0),
+            normal=mt.Vec3f(0.0, 0.0, 1.0),
+            material=mt.Material(
+                emissive=mt.Vec3f(0.0, 0.0, 0.0),
+                albedo=mt.Vec3f(0.0, 0.0, 1.0),
+                roughness=0.5,
+            )
+        )
+    )
 
     let integrator = mt.integrate.PathIntegrator()
     var imagebuffer = mt.ImageBuffer(width, height)
