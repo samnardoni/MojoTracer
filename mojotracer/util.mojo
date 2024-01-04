@@ -40,8 +40,8 @@ fn tangent_and_bitangent(normal: Vec3f) -> (Vec3f, Vec3f):
         arbitrary = Vec3f(0, 1, 0)
     else:
         arbitrary = Vec3f(0, 0, 1)
-    let tangent = cross(arbitrary, normal)
-    let bitangent = cross(normal, tangent)
+    let tangent = cross(normal, arbitrary)
+    let bitangent = cross(tangent, normal)
     return (tangent, bitangent)
 
 
