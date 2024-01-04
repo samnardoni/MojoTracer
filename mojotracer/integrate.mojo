@@ -30,6 +30,7 @@ struct PathIntegrator(Integrator):
     alias max_depth = 4
     alias elipson = 0.001
     alias brdf = brdf.MicrofacetBRDF()
+    # alias brdf = brdf.LambertBRDF()
 
     fn sample[G: Geometry](self, geometry: G, original_ray: Ray) -> Color:       
         var ray = original_ray
@@ -45,16 +46,22 @@ struct PathIntegrator(Integrator):
                 # TODO: tuple destructuring?
                 let sample = self.brdf.sample(hit.normal, w_o, hit.material)
                 let w_i = sample.get[0, Vec3f]()
-                let p = sample.get[1, Float32]()
-                let f_r = self.brdf.brdf(n, w_i, w_o, hit.material)
+                var p = sample.get[1, Float32]()
+                var f_r = self.brdf.brdf(n, w_i, w_o, hit.material)
                 # TODO: Does this belong in the BRDF?
                 # TODO: How does this work with BTDF?
                 let cos_theta = util.clamp(
                     dot(n, w_i), 0, 1
                 )  # TODO: Does this need to be clamped?
 
+                # TODO: How best to handle very small probabilities?
+                p = util.clamp(p, 0.1, 1)
+
+                # TODO: BRDF shouldn't return greater than 1? (But it does)
+                f_r = util.clamp(f_r, 0, 1)
+
                 color = color + throughput * hit.material.emissive  # TODO: +=
-                throughput = throughput * f_r * cos_theta * (1 / p)  # TODO: *=
+                throughput = throughput * cos_theta * f_r / p   # TODO: *=
                 ray = Ray(origin=hit.p + hit.normal * self.elipson, direction=w_i)
             else:
                 break
