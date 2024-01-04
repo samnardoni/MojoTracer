@@ -51,13 +51,20 @@ struct GGX(Sample):
         let theta = acos(sqrt((1 - e[0]) / ((self.alpha**2 - 1) * e[0] + 1)))
         let phi = 2 * util.pi * e[1]
         let w_m_t = util.spherical_to_cartesian(theta, phi)
-        let w_m_w = util.tangent_to_world(w_m_t, normal)
-        let w_i = util.reflect(-w_o, w_m_w)
+        # TODO: Is this correct
+        let reflection = util.reflect(-w_o, normal)
+        let w_i = util.tangent_to_world(w_m_t, reflection)
         # PDF
         let cos_theta = cos(theta)
         let sin_theta = sin(theta)
         let num = self.alpha**2 * cos_theta * sin_theta
         let denom = util.pi * ((self.alpha**2 - 1) * (cos_theta ** 2) + 1) ** 2
         let pdf = num / denom
+
+        # TODO: Remove eventually...
+        if math.isnan(pdf):
+            print("GGX PDF is NaN", num, denom, self.alpha, theta, phi)
+            return (w_i, Float32(1))
+
         return (w_i, pdf)
 
