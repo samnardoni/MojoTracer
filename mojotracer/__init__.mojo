@@ -1,6 +1,6 @@
 from .camera import Camera
 from .color import Color
-from .geometry import Geometry, Scene, Sphere, Triangle
+from .geometry import Geometry, Plane, Scene, Sphere, Triangle
 from .hitrecord import HitRecord
 from .image import Image
 from .imagebuffer import ImageBuffer
