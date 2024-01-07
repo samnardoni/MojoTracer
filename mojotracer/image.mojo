@@ -69,11 +69,11 @@ fn image_to_numpy(image: Image) raises -> PythonObject:
             ).value
         )
     )
-    for y in range(image.height):
-        for x in range(image.width):
-            let index = y * image.width + x
-            for dim in range(3):
-                out_pointer.store(index * 3 + dim, in_pointer[index * 3 + dim])
+    memory.memcpy(
+        out_pointer,
+        in_pointer,
+        image.height * image.width * 3,
+    )
     return np_image
 
 
@@ -95,9 +95,9 @@ fn numpy_to_image(np_image: PythonObject) raises -> Image:
             _type = __mlir_type[`!kgen.pointer<scalar<f32>>`]
         ](SIMD[DType.index, 1](image.data.data().__as_index()).value)
     )
-    for y in range(height):
-        for x in range(width):
-            let index = y * width + x
-            for dim in range(3):
-                out_pointer.store(index * 3 + dim, in_pointer[index * 3 + dim])
+    memory.memcpy(
+        out_pointer,
+        in_pointer,
+        image.height * image.width * 3,
+    )
     return image
