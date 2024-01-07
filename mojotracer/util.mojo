@@ -1,4 +1,4 @@
-from math import abs, cos, sin, sqrt
+from math import abs, acos, atan2, cos, sin, sqrt
 from tensor import Index
 
 # TODO: stdlib?
@@ -87,10 +87,21 @@ fn spherical_to_cartesian(theta: Float32, phi: Float32) -> Vec3f:
     return Vec3f(x=sin(theta) * cos(phi), y=cos(theta), z=sin(theta) * sin(phi))
 
 
+# TODO: Is this 'symmetric'(?) with spherical_to_cartesian?
+@always_inline
+fn cartesian_to_spherical(v: Vec3f) -> (Float32, Float32):
+    let theta = acos(v[1])
+    let phi = atan2(v[0], v[2])
+    return (theta, phi)
+
+
 # TODO: Is there a better name for this?
 @always_inline
-fn remap(v: Float32, min1: Float32, max1: Float32, min2: Float32, max2: Float32) -> Float32:
+fn remap(
+    v: Float32, min1: Float32, max1: Float32, min2: Float32, max2: Float32
+) -> Float32:
     return (v - min1) / (max1 - min1) * (max2 - min2) + min2
+
 
 # TODO: Generic?
 @always_inline

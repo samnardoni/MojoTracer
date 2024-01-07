@@ -96,12 +96,24 @@ struct Plane(Geometry):
 
 @value
 struct Environment(Geometry):
-    var material: Material
+    alias intersection_distance = 1000
+
+    var texture: Image
 
     fn intersect(self, ray: Ray) -> HitRecord:
-        alias t = 1000
+        let spherical = util.cartesian_to_spherical(ray.direction)
+        let theta = spherical.get[0, Float32]()
+        let phi = spherical.get[1, Float32]()
+        let y = util.remap(theta, 0, util.pi, 0, Float32(self.texture.height))
+        let x = util.remap(phi, -util.pi, util.pi, 0, Float32(self.texture.width))
+        let color = self.texture.get(int(x), int(y))
         return HitRecord(
-            t=t, p=ray.at(t), normal=-ray.direction, material=self.material
+            t=self.intersection_distance,
+            p=ray.at(self.intersection_distance),
+            normal=-ray.direction,
+            albedo=Vec3f(),
+            emission=color,
+            roughness=0,
         )
 
 
@@ -119,11 +131,7 @@ struct Scene(Geometry):
         self.triangles = DynamicVector[Triangle]()
         self.planes = DynamicVector[Plane]()
         self.environment = Environment(
-            material=Material(
-                emissive=Vec3f(0, 0, 0),
-                albedo=Vec3f(0, 0, 0),
-                roughness=0,
-            )
+            texture=Image(0, 0) # TODO: Optional/None
         )
 
     fn add(inout self, sphere: Sphere):

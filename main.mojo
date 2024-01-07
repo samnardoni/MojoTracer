@@ -27,96 +27,104 @@ fn main():
                 )
             )
 
-    # Light
-    scene.add(
-        mt.Sphere(
-            center=mt.Vec3f(0.0, 10.0+6.0-0.5, 10.0),
-            radius=10,
-            material=mt.Material(
-                emissive=mt.Vec3f(20.0, 20.0, 20.0),
-                albedo=mt.Vec3f(1.0, 1.0, 1.0),
-                roughness=0,
-            ),
-        )
-    )
+    # # Light
+    # scene.add(
+    #     mt.Sphere(
+    #         center=mt.Vec3f(0.0, 10.0+6.0-0.5, 10.0),
+    #         radius=10,
+    #         material=mt.Material(
+    #             emissive=mt.Vec3f(20.0, 20.0, 20.0),
+    #             albedo=mt.Vec3f(1.0, 1.0, 1.0),
+    #             roughness=0,
+    #         ),
+    #     )
+    # )
 
-    # Ceiling
-    scene.add(
-        mt.Plane(
-            origin=mt.Vec3f(0.0, 6.0, 0.0),
-            normal=mt.Vec3f(0.0, -1.0, 0.0),
-            material=mt.Material(
-                emissive=mt.Vec3f(0.0, 0.0, 0.0),
-                albedo=mt.Vec3f(1.0, 1.0, 1.0),
-                roughness=1.0,
-            )
-        )
-    )
+    # # Ceiling
+    # scene.add(
+    #     mt.Plane(
+    #         origin=mt.Vec3f(0.0, 6.0, 0.0),
+    #         normal=mt.Vec3f(0.0, -1.0, 0.0),
+    #         material=mt.Material(
+    #             emissive=mt.Vec3f(0.0, 0.0, 0.0),
+    #             albedo=mt.Vec3f(1.0, 1.0, 1.0),
+    #             roughness=1.0,
+    #         )
+    #     )
+    # )
 
-    # Floor
-    scene.add(
-        mt.Plane(
-            origin=mt.Vec3f(0.0, -6.0, 0.0),
-            normal=mt.Vec3f(0.0, 1.0, 0.0),
-            material=mt.Material(
-                emissive=mt.Vec3f(0.0, 0.0, 0.0),
-                albedo=mt.Vec3f(1.0, 1.0, 1.0),
-                roughness=0.25,
-            )
-        )
-    )
+    # # Floor
+    # scene.add(
+    #     mt.Plane(
+    #         origin=mt.Vec3f(0.0, -6.0, 0.0),
+    #         normal=mt.Vec3f(0.0, 1.0, 0.0),
+    #         material=mt.Material(
+    #             emissive=mt.Vec3f(0.0, 0.0, 0.0),
+    #             albedo=mt.Vec3f(1.0, 1.0, 1.0),
+    #             roughness=0.25,
+    #         )
+    #     )
+    # )
 
-    # Back wall
-    scene.add(
-        mt.Plane(
-            origin=mt.Vec3f(0.0, 0.0, 20.0),
-            normal=mt.Vec3f(0.0, 0.0, -1.0),
-            material=mt.Material(
-                emissive=mt.Vec3f(0.0, 0.0, 0.0),
-                albedo=mt.Vec3f(1.0, 1.0, 1.0),
-                roughness=1.0,
-            )
-        )
-    )
+    # # Back wall
+    # scene.add(
+    #     mt.Plane(
+    #         origin=mt.Vec3f(0.0, 0.0, 20.0),
+    #         normal=mt.Vec3f(0.0, 0.0, -1.0),
+    #         material=mt.Material(
+    #             emissive=mt.Vec3f(0.0, 0.0, 0.0),
+    #             albedo=mt.Vec3f(1.0, 1.0, 1.0),
+    #             roughness=1.0,
+    #         )
+    #     )
+    # )
 
-    # Left wall
-    scene.add(
-        mt.Plane(
-            origin=mt.Vec3f(-10.0, 0.0, 0.0),
-            normal=mt.Vec3f(1.0, 0.0, 0.0),
-            material=mt.Material(
-                emissive=mt.Vec3f(0.0, 0.0, 0.0),
-                albedo=mt.Vec3f(1.0, 0.0, 0.0),
-                roughness=1.0,
-            )
-        )
-    )
+    # # Left wall
+    # scene.add(
+    #     mt.Plane(
+    #         origin=mt.Vec3f(-10.0, 0.0, 0.0),
+    #         normal=mt.Vec3f(1.0, 0.0, 0.0),
+    #         material=mt.Material(
+    #             emissive=mt.Vec3f(0.0, 0.0, 0.0),
+    #             albedo=mt.Vec3f(1.0, 0.0, 0.0),
+    #             roughness=1.0,
+    #         )
+    #     )
+    # )
 
-    # Right wall
-    scene.add(
-        mt.Plane(
-            origin=mt.Vec3f(10.0, 0.0, 0.0),
-            normal=mt.Vec3f(-1.0, 0.0, 0.0),
-            material=mt.Material(
-                emissive=mt.Vec3f(0.0, 0.0, 0.0),
-                albedo=mt.Vec3f(0.0, 1.0, 0.0),
-                roughness=1.0,
-            )
-        )
-    )
+    # # Right wall
+    # scene.add(
+    #     mt.Plane(
+    #         origin=mt.Vec3f(10.0, 0.0, 0.0),
+    #         normal=mt.Vec3f(-1.0, 0.0, 0.0),
+    #         material=mt.Material(
+    #             emissive=mt.Vec3f(0.0, 0.0, 0.0),
+    #             albedo=mt.Vec3f(0.0, 1.0, 0.0),
+    #             roughness=1.0,
+    #         )
+    #     )
+    # )
 
-    # Front wall
-    scene.add(
-        mt.Plane(
-            origin=mt.Vec3f(0.0, 0.0, -10.0),
-            normal=mt.Vec3f(0.0, 0.0, 1.0),
-            material=mt.Material(
-                emissive=mt.Vec3f(0.0, 0.0, 0.0),
-                albedo=mt.Vec3f(0.0, 0.0, 1.0),
-                roughness=0.5,
-            )
-        )
-    )
+    # # Front wall
+    # scene.add(
+    #     mt.Plane(
+    #         origin=mt.Vec3f(0.0, 0.0, -10.0),
+    #         normal=mt.Vec3f(0.0, 0.0, 1.0),
+    #         material=mt.Material(
+    #             emissive=mt.Vec3f(0.0, 0.0, 0.0),
+    #             albedo=mt.Vec3f(0.0, 0.0, 1.0),
+    #             roughness=0.5,
+    #         )
+    #     )
+    # )
+
+    try:
+        let texture = mt.image.load("./asset/environment_map/market_square.jpg")
+        scene.set(mt.geometry.Environment(
+            texture=texture,
+        ))
+    except e:
+        print("Error loading environment texture", e)
 
     let integrator = mt.integrate.PathIntegrator()
     var imagebuffer = mt.ImageBuffer(width, height)

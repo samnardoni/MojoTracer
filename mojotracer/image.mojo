@@ -1,6 +1,9 @@
+from python import Python
 from utils.index import Index
 
 
+# TODO: This probably should not be a value...
+@value
 struct Image:
     var width: Int
     var height: Int
@@ -24,6 +27,32 @@ struct Image:
         self.data[Index(x, y, 0)] = color[0]
         self.data[Index(x, y, 1)] = color[1]
         self.data[Index(x, y, 2)] = color[2]
+
+
+# TODO: Below belong in a separate module ('imageio' or something)
+
+
+fn load(path: String) raises -> Image:
+    let pil = Python.import_module("PIL.Image")
+    let pil_image = pil.open(path).resize((1024, 512))  # TODO Remove resize!
+    let width = pil_image.size[0]
+    let height = pil_image.size[1]
+    let pixels = pil_image.load()
+    var image = Image(int(width), int(height))
+    for y in range(height):
+        for x in range(width):
+            let pixel = pil_image.getpixel((x, y))
+            # let pixel = pixels[y*width + x]
+            image.set(
+                x,
+                y,
+                Color(
+                    int(pixel[0]) / Float32(255),
+                    int(pixel[1]) / Float32(255),
+                    int(pixel[2]) / Float32(255),
+                ),
+            )
+    return image
 
 
 fn to_ppm(image: Image) -> String:
