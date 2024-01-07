@@ -30,22 +30,24 @@ struct Image:
 
 
 # TODO: Below belong in a separate module ('imageio' or something)
-# TODO: Assumptions about 8-bit RGB images.
 
 
 fn load(path: String) raises -> Image:
     let pil = Python.import_module("PIL.Image")
-    let pil_image = pil.open(path).resize((1024, 512))  # TODO Remove resize!
     let np = Python.import_module("numpy")
-    let np_image_int = np.array(pil_image)
-    let np_image_float = np_image_int.astype("float32") / 255.0
-    return numpy_to_image(np_image_float)
+    let dtype = np.uint8
+    let pil_image = pil.open(path).resize((1024, 512))  # TODO Remove resize!
+    let array_int = np.array(pil_image)
+    let array_float = array_int.astype("float32") / np.iinfo(dtype).max
+    return numpy_to_image(array_float)
 
 
 fn save(image: Image, path: String) raises:
     let pil = Python.import_module("PIL.Image")
+    let np = Python.import_module("numpy")
+    let dtype = np.uint8
     let array_float = image_to_numpy(image)
-    let array_int = (array_float * 255.0).astype("uint8")
+    let array_int = (np.clip(array_float, 0, 1) * np.iinfo(dtype).max).astype(dtype)
     let pil_image = pil.fromarray(array_int)
     _ = pil_image.save(path)
 
