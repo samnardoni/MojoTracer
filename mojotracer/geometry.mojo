@@ -95,17 +95,36 @@ struct Plane(Geometry):
 
 
 @value
+struct Environment(Geometry):
+    var material: Material
+
+    fn intersect(self, ray: Ray) -> HitRecord:
+        alias t = 1000
+        return HitRecord(
+            hit=True, t=t, p=ray.at(t), normal=-ray.direction, material=self.material
+        )
+
+
+@value
 struct Scene(Geometry):
     # TODO: Trait object or function pointer rather than
     #       separate vectors?
     var spheres: DynamicVector[Sphere]
     var triangles: DynamicVector[Triangle]
     var planes: DynamicVector[Plane]
+    var environment: Environment
 
     fn __init__(inout self):
         self.spheres = DynamicVector[Sphere]()
         self.triangles = DynamicVector[Triangle]()
         self.planes = DynamicVector[Plane]()
+        self.environment = Environment(
+            material=Material(
+                emissive=Vec3f(0, 0, 0),
+                albedo=Vec3f(0, 0, 0),
+                roughness=0,
+            )
+        )
 
     fn add(inout self, sphere: Sphere):
         self.spheres.append(sphere)
@@ -116,11 +135,18 @@ struct Scene(Geometry):
     fn add(inout self, plane: Plane):
         self.planes.append(plane)
 
+    fn set(inout self, environment: Environment):
+        self.environment = environment
+
     fn intersect(self, ray: Ray) -> HitRecord:
         let spheres = _intersect_collection[Sphere](ray, self.spheres)
         let triangles = _intersect_collection[Triangle](ray, self.triangles)
         let planes = _intersect_collection[Plane](ray, self.planes)
-        return _closest_intersection(planes, _closest_intersection(spheres, triangles))
+        let environment = self.environment.intersect(ray)
+        return _closest_intersection(
+            environment,
+            _closest_intersection(planes, _closest_intersection(spheres, triangles)),
+        )
 
 
 fn _intersect_collection[
