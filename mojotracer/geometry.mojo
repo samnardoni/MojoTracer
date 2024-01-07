@@ -101,7 +101,7 @@ struct Environment(Geometry):
     fn intersect(self, ray: Ray) -> HitRecord:
         alias t = 1000
         return HitRecord(
-            hit=True, t=t, p=ray.at(t), normal=-ray.direction, material=self.material
+            t=t, p=ray.at(t), normal=-ray.direction, material=self.material
         )
 
 

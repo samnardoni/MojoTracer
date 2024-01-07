@@ -1,17 +1,19 @@
 trait BRDF:
-    fn brdf(self, normal: Vec3f, w_i: Vec3f, w_o: Vec3f, material: Material) -> Vec3f:
+    fn brdf(self, normal: Vec3f, w_i: Vec3f, w_o: Vec3f) -> Vec3f:
         ...
 
-    fn sample(self, normal: Vec3f, w_o: Vec3f, material: Material) -> (Vec3f, Float32):
+    fn sample(self, normal: Vec3f, w_o: Vec3f) -> (Vec3f, Float32):
         ...
 
 
 @value
 struct LambertBRDF(BRDF):
-    fn brdf(self, normal: Vec3f, w_i: Vec3f, w_o: Vec3f, material: Material) -> Vec3f:
-        return material.albedo * (1 / util.pi)
+    var albedo: Vec3f
 
-    fn sample(self, normal: Vec3f, w_o: Vec3f, material: Material) -> (Vec3f, Float32):
+    fn brdf(self, normal: Vec3f, w_i: Vec3f, w_o: Vec3f) -> Vec3f:
+        return self.albedo * (1 / util.pi)
+
+    fn sample(self, normal: Vec3f, w_o: Vec3f) -> (Vec3f, Float32):
         let sample = mojotracer.sample.CosineWeightedHemisphere()  # TODO: Remove package name
         return sample.sample(normal, w_o)
 
@@ -22,8 +24,12 @@ struct MicrofacetBRDF(BRDF):
     alias min_roughness = 0.1
     alias max_roughness = 1.0
 
-    fn brdf(self, normal: Vec3f, w_i: Vec3f, w_o: Vec3f, material: Material) -> Vec3f:
-        let roughness = util.clamp(material.roughness, self.min_roughness, self.max_roughness)
+    var albedo: Vec3f
+    var roughness: Float32
+
+    fn brdf(self, normal: Vec3f, w_i: Vec3f, w_o: Vec3f) -> Vec3f:
+        # TODO: Calculate this in constructor
+        let roughness = util.clamp(self.roughness, self.min_roughness, self.max_roughness)
         let half = normalize(w_i + w_o)
         let d = d_ggx(normal, half, roughness)
         # TODO: Why doesn't this work?
@@ -32,11 +38,11 @@ struct MicrofacetBRDF(BRDF):
         let f = f_implicit(normal, w_o)
         let g = g_implicit(normal, w_i, w_o)
         return (
-            material.albedo * (d * f * g) / (4.0 * dot(normal, w_i) * dot(normal, w_o))
+            self.albedo * (d * f * g) / (4.0 * dot(normal, w_i) * dot(normal, w_o))
         )
 
-    fn sample(self, normal: Vec3f, w_o: Vec3f, material: Material) -> (Vec3f, Float32):
-        let roughness = util.clamp(material.roughness, self.min_roughness, self.max_roughness)
+    fn sample(self, normal: Vec3f, w_o: Vec3f) -> (Vec3f, Float32):
+        let roughness = util.clamp(self.roughness, self.min_roughness, self.max_roughness)
         let sample = mojotracer.sample.GGX(alpha=roughness)  # TODO: Remove package name
         return sample.sample(normal, w_o)
 

@@ -29,7 +29,8 @@ struct DepthIntegrator(Integrator):
 struct PathIntegrator(Integrator):
     alias max_depth = 4
     alias elipson = 0.001
-    alias brdf = brdf.MicrofacetBRDF()
+    alias min_throughput = 0.001
+    # alias brdf = brdf.MicrofacetBRDF()
     # alias brdf = brdf.LambertBRDF()
 
     fn sample[G: Geometry](self, geometry: G, original_ray: Ray) -> Color:       
@@ -40,14 +41,15 @@ struct PathIntegrator(Integrator):
         for _ in range(self.max_depth):
             let hit = geometry.intersect(ray)
             if hit.hit:
+                let brdf = brdf.MicrofacetBRDF(albedo=hit.albedo, roughness=hit.roughness)
                 let n = hit.normal
                 # TODO: World vs local?
                 let w_o = -ray.direction
                 # TODO: tuple destructuring?
-                let sample = self.brdf.sample(hit.normal, w_o, hit.material)
+                let sample = brdf.sample(hit.normal, w_o)
                 let w_i = sample.get[0, Vec3f]()
                 var p = sample.get[1, Float32]()
-                var f_r = self.brdf.brdf(n, w_i, w_o, hit.material)
+                var f_r = brdf.brdf(n, w_i, w_o)
                 # TODO: Does this belong in the BRDF?
                 # TODO: How does this work with BTDF?
                 let cos_theta = util.clamp(
@@ -60,9 +62,12 @@ struct PathIntegrator(Integrator):
                 # TODO: BRDF shouldn't return greater than 1? (But it does)
                 f_r = util.clamp(f_r, 0, 1)
 
-                color = color + throughput * hit.material.emissive  # TODO: +=
+                color = color + throughput * hit.emission  # TODO: +=
                 throughput = throughput * cos_theta * f_r / p   # TODO: *=
                 ray = Ray(origin=hit.p + hit.normal * self.elipson, direction=w_i)
+
+                if length(throughput) < self.min_throughput:
+                    break
             else:
                 break
 
