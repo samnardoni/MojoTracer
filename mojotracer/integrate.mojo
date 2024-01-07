@@ -30,8 +30,6 @@ struct PathIntegrator(Integrator):
     alias max_depth = 4
     alias elipson = 0.001
     alias min_throughput = 0.001
-    # alias brdf = brdf.MicrofacetBRDF()
-    # alias brdf = brdf.LambertBRDF()
 
     fn sample[G: Geometry](self, geometry: G, original_ray: Ray) -> Color:       
         var ray = original_ray
@@ -41,7 +39,7 @@ struct PathIntegrator(Integrator):
         for _ in range(self.max_depth):
             let hit = geometry.intersect(ray)
             if hit.hit:
-                let brdf = brdf.MicrofacetBRDF(albedo=hit.albedo, roughness=hit.roughness)
+                let brdf = brdf.CombinedBRDF(albedo=hit.albedo, roughness=hit.roughness)
                 let n = hit.normal
                 # TODO: World vs local?
                 let w_o = -ray.direction
